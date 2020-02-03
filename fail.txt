@@ -1,0 +1,142 @@
+
+typedef enum {
+	can_send_1 = 0x10;
+	can_send_2 = 0x22;
+	can_rev_1 0xA1;
+	can_rev_2 0x2A;
+	can_sum_1 0x1A;
+	can_clock_1 0x2A;
+} CAN_ID_TABLE;
+
+typedef enum {
+	NORMAL = 0
+	CAN_SEND_FAIL,
+	CAN_REV_FAIL,
+	CAN_CRC_FAIL,
+	CAN_SUM_FAIL,
+	CAN_CLOCK_FAIL
+} FAIL_CODE;
+
+static struct{
+	CAN_ID_TABLE Can_ID_Table,
+	FAIL_CODE Fail_Code,
+	int Fail_Cnt,
+	bool Fail_Flag
+} MsgIDTable[] = {
+	{can_send_1, CAN_SEND_FAIL, 0, false}
+	{can_send_2, CAN_SEND_FAIL, 0, false}
+	{can_rev_1, CAN_REV_FAIL, 0, false}
+	{can_rev_2, CAN_REV_FAIL, 0, false}
+	{can_sum_1, CAN_SUM_FAIL, 0, false}
+	{can_clock_1, CAN_CLOCK_FAIL, 0, false}
+}
+
+
+#define ARRAY_LENGTH(array) (sizeof(array) / sizeof(array[0]))
+int const Fail_Cnt_th = 10;
+static int Can_Send_Cnt  = 0;
+static int Can_Rev_Cnt   = 0;
+static Can_Fail_Flag = false; // MsgInfoに依存しない、共通なFlag
+int Fail_State[] ={};
+
+
+// 正常データ書込み処理
+void NormalSet(){
+	CanState[NORMAL] = 0xFFFF; 
+}
+
+// Can未送信診断処理
+void CanSendFailSet(){
+	Fail_State[CAN_SEND_FAIL] = 0xFFFF;
+}
+
+// Can未受信診断処理
+void CanRevFailSet(){
+	Fail_State[CAN_REV_FAIL] = 0xFFFE;
+}
+
+// CanCRC診断処理
+void CanCRCFailSet(){
+	Fail_State[CAN_CRC_FAIL] = 0xFFFE;
+}
+
+
+void 通信コール(){
+if(!Can_Fail_Flag)
+{
+	// Do Nathing
+	// 異常判定
+}
+else {
+    for(int i=0; i < ARRAY_LENGTH(MsgIDTable); i++)
+    {
+        /* 入力判定部 */
+        MsgIDTable[i].Fail_Flag = API(MsgIDTable[i].Can_ID_Table)
+
+        /* 異常判定部 */
+        if(MsgIDTable[i].Fail_Flag)
+        {
+            MsgIDTable[i].Fail_Cnt++;
+            if(MsgIDTable[i].Fail_Cnt > Fail_Cnt_th)
+            {
+                Can_Fail_Flag = true; // info毎に分けた方がよさそう…
+
+                /* データ生成 */
+                switch(MsgIDTable[i].Fail_Code)
+                {
+                    case CAN_SEND_FAIL:
+                        CanSendFailSet(); 
+                        break;
+                        
+                    case CAN_REV_FAIL:
+                        CanRevFailSet();
+                        break;
+                        
+                    case CAN_CRC_FAIL:
+                        CanCRCFailSet();
+                        break;
+                        
+                    case CAN_SUM_FAIL: // Canサムチェック診断処理
+                        Fail_State[CAN_SUM_FAIL] = 0xFFFE;
+                        break;
+                        
+                    case CAN_CLOCK_FAIL: // CanClock信診断処理
+                        Fail_State[CAN_SUM_FAIL] = 0xFFFE;
+                        break;
+                        
+                    defalt:
+                        break;
+                }
+            }
+        }
+        else {
+            // 異常カウントをクリアする
+            if(MsgIDTable[i].Fail_Cnt != 0)
+            {
+                MsgIDTable[i].Fail_Cnt = 0;
+            }
+        }
+    }
+}
+
+if(!CanFailFlag)
+{
+	NormalSet();
+}
+else 
+{
+	// Do Nathing
+}
+
+
+
+// 出力処理
+
+}
+
+
+
+C++
+
+
+
