@@ -1,0 +1,34 @@
+故障診断関数(SYS1){
+	
+	static struct 配列A[];
+	static struct 配列B[];
+	static struct 配列C[];
+	
+	
+	switch(Enum)
+	{
+		case 0;
+			/* 入力部 */
+			A();
+			B();
+			/* 判定部 */
+			D();
+			
+			/* 送信 */
+			Z();
+			
+		case 1;
+			A()
+			C();
+	}
+
+
+
+
+/* 入力部 */
+void A(struct* const 配列A){
+	for(int i=0; i < ARRAY_LENGTH(配列A); i++){
+		配列A[i]->Flag = API(配列A[i]->Can_ID);
+	}
+}
+}

@@ -1,5 +1,12 @@
 
 typedef enum {
+	SYS1,
+	SYS2,
+	VMC,
+	TC
+} Soc_Table;
+
+typedef enum {
 	can_send_1 = 0x10;
 	can_send_2 = 0x22;
 	can_rev_1 0xA1;
@@ -115,7 +122,7 @@ void CanCRCFailSet(){
 }
 
 
-void 通信コール()
+void FailSafe_SYS1(Soc Table)
 {
 	static struct{
 		CAN_ID_TABLE Can_ID_Table,
@@ -131,22 +138,16 @@ void 通信コール()
 		{can_clock_1, CAN_CLOCK_FAIL, 0, false}
 	}
 
-	if(!Can_Fail_Flag)
-	{
-		// Do Nathing
-		// 異常判定
-	}
-	else {
-		for(int i=0; i < ARRAY_LENGTH(MsgIDTable); i++)
-		{
-			/* 入力判定部 */
-			MsgIDTable[i].Fail_Flag = Call_CanAPI(MsgIDTable[i].Can_ID_Table);
 
-			/* 異常判定部 */
-			Call_Fail_Cnt(MsgIDTable, i)
-					//	MsgIDTable[i].Fail_Code,
-					//	MsgIDTable[i].Fail_Cnt,
-					//	MsgIDTable[i].Fail_Flag
+	for(int i=0; i < ARRAY_LENGTH(MsgIDTable); i++)
+	{
+		/* 入力判定部 */
+		MsgIDTable[i].Fail_Flag = Call_CanAPI(MsgIDTable[i].Can_ID_Table);
+		/* 異常判定部 */
+		Call_Fail_Cnt(MsgIDTable, i)
+				//	MsgIDTable[i].Fail_Code,
+				//	MsgIDTable[i].Fail_Cnt,
+				//	MsgIDTable[i].Fail_Flag
 		}
 
 		for(int i=0; i < ARRAY_LENGTH(MsgIDTable); i++)
