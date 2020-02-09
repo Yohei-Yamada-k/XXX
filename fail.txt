@@ -1,12 +1,30 @@
 
 typedef enum {
-	can_send_1 = 0x10;
-	can_send_2 = 0x22;
-	can_rev_1 0xA1;
-	can_rev_2 0x2A;
-	can_sum_1 0x1A;
-	can_clock_1 0x2A;
-} CAN_ID_TABLE;
+    //AD_CAN0_NODE = 0x14;
+    //AD_CAN1_NODE = 0x01;
+    //AD_CAN2_NODE = 0x09;
+    AD_CAN3_NODE = 0x0c;
+    AD_CAN4_NODE = 0x0e;
+    AD_CAN5_NODE = 0x1a;
+    AD_CAN6_NODE = 0x21;
+} VMC_NODE_CAN_ID;
+
+typedef enum {
+    AD_CAN0_NODE = 0x14;
+    //AD_CAN1_NODE = 0x01;
+    AD_CAN2_NODE = 0x09;
+    //AD_CAN3_NODE = 0x0c;
+    //AD_CAN4_NODE = 0x0e;
+    AD_CAN5_NODE = 0x1a;
+    AD_CAN6_NODE = 0x21;
+} TC_NODE_CAN_ID;
+
+typedef enum {
+    SYS1;
+    SYS2;
+    VMC;
+    TC;
+} MICON_TYPE;
 
 typedef enum {
 	NORMAL = 0
@@ -17,19 +35,18 @@ typedef enum {
 	CAN_CLOCK_FAIL
 } FAIL_CODE;
 
-	static struct{
-		CAN_ID_TABLE Can_ID_Table,
-		FAIL_CODE Fail_Code,
-		int Fail_Cnt,
-		bool Fail_Flag
-	} MsgIDTable[] = {
-		{can_send_1, CAN_SEND_FAIL, 0, false}
-		{can_send_2, CAN_SEND_FAIL, 0, false}
-		{can_rev_1, CAN_REV_FAIL, 0, false}
-		{can_rev_2, CAN_REV_FAIL, 0, false}
-		{can_sum_1, CAN_SUM_FAIL, 0, false}
-		{can_clock_1, CAN_CLOCK_FAIL, 0, false}
-	}
+    static struct CanSend_st{
+            CAN_ID TemporaryCanID,
+            FAIL_SAFE_TABLE FailSafe,
+            int Fail_Cnt,
+        } CanSendInfo[] = {
+            {can_send_1, CAN_SEND_FAIL, false}
+            {can_send_2, CAN_SEND_FAIL, false}
+            {can_rev_1, CAN_REV_FAIL, false}
+            {can_rev_2, CAN_REV_FAIL, false}
+            {can_sum_1, CAN_SUM_FAIL, false}
+            {can_clock_1, CAN_CLOCK_FAIL, false}
+        }
 
 
 #define ARRAY_LENGTH(array) (sizeof(array) / sizeof(array[0]))
@@ -94,43 +111,17 @@ Call_Fail_Cnt(struct* const TmpStruct, int index)
 
 
 
-// 正常データ書込み処理
-void NormalSet(){
-	CanState[NORMAL] = 0xFFFF; 
-}
-
-// Can未送信診断処理
-void CanSendFailSet(){
-	Fail_State[CAN_SEND_FAIL] = 0xFFFF;
-}
-
-// Can未受信診断処理
-void CanRevFailSet(){
-	Fail_State[CAN_REV_FAIL] = 0xFFFE;
-}
-
-// CanCRC診断処理
-void CanCRCFailSet(){
-	Fail_State[CAN_CRC_FAIL] = 0xFFFE;
-}
 
 
-void 通信コール()
+void f_CanSend_set(MICON_TYPE)
 {
-	static struct{
-		CAN_ID_TABLE Can_ID_Table,
-		FAIL_CODE Fail_Code,
-		int Fail_Cnt,
-		bool Fail_Flag
-	} MsgIDTable[] = {
-		{can_send_1, CAN_SEND_FAIL, 0, false}
-		{can_send_2, CAN_SEND_FAIL, 0, false}
-		{can_rev_1, CAN_REV_FAIL, 0, false}
-		{can_rev_2, CAN_REV_FAIL, 0, false}
-		{can_sum_1, CAN_SUM_FAIL, 0, false}
-		{can_clock_1, CAN_CLOCK_FAIL, 0, false}
-	}
+    CanSendCmd[] = {Invalid, cmd1, cmd2, cmd3};
+    CanSendCmd[MICON_TYPE]
 
+
+
+    static CanSend_st CanSendType[XXX] = 
+    
 	if(!Can_Fail_Flag)
 	{
 		// Do Nathing
@@ -171,9 +162,11 @@ void 通信コール()
 	// 出力処理
 }
 
-
-
-C++
-
-
-
+int Cmd1(){
+    Cmd1Tabale[] = {
+        AD_CAN3_NODE,
+        AD_CAN4_NODE,
+        AD_CAN5_NODE,
+    };
+    return 0;
+}
